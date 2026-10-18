@@ -38,8 +38,10 @@ COPY --from=backend-builder /build/bin/authentic-server /usr/local/bin/authentic
 COPY --from=backend-builder /build/bin/authentic-cli /usr/local/bin/authentic-cli
 COPY --from=frontend-builder /build/dist /usr/share/authentic/html
 
-# Persistent data directory for SQLite deployments
-RUN mkdir -p /data && chown -R authentic:authentic /data /usr/share/authentic/html
+# Persistent data directory for SQLite deployments (no special root permissions required)
+RUN mkdir -p /data /home/authentic/data && \
+    chmod 777 /data /home/authentic/data && \
+    chown -R authentic:authentic /data /home/authentic /usr/share/authentic/html
 
 USER authentic
 

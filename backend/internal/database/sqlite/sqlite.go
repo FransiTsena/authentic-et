@@ -20,28 +20,52 @@ type DB struct {
 }
 
 func Open(cfg *config.Config) (*DB, error) {
-	dir := filepath.Dir(cfg.SQLitePath)
-	if err := os.MkdirAll(dir, 0755); err != nil {
-		return nil, fmt.Errorf("failed to create sqlite directory: %w", err)
+	primaryPath := cfg.SQLitePath
+	if primaryPath == "" {
+		primaryPath = "./data/authentic.db"
 	}
 
-	// Enable WAL mode, foreign keys, and busy timeout for concurrent safety
-	dsn := fmt.Sprintf("%s?_pragma=journal_mode(WAL)&_pragma=busy_timeout(5000)&_pragma=foreign_keys(1)", cfg.SQLitePath)
-	db, err := sql.Open("sqlite", dsn)
-	if err != nil {
-		return nil, fmt.Errorf("failed to open sqlite database: %w", err)
+	pathsToTry := []string{primaryPath}
+
+	// Prepare user-level fallback paths that require no special root permissions:
+	homeDir, _ := os.UserHomeDir()
+	if homeDir != "" {
+		pathsToTry = append(pathsToTry, filepath.Join(homeDir, "data", "authentic.db"))
+	}
+	pathsToTry = append(pathsToTry, "./data/authentic.db")
+
+	var lastErr error
+	for _, p := range pathsToTry {
+		dir := filepath.Dir(p)
+		if err := os.MkdirAll(dir, 0777); err != nil {
+			lastErr = fmt.Errorf("failed to create sqlite directory '%s': %w", dir, err)
+			continue
+		}
+
+		// Enable WAL mode, foreign keys, and busy timeout for concurrent safety
+		dsn := fmt.Sprintf("%s?_pragma=journal_mode(WAL)&_pragma=busy_timeout(5000)&_pragma=foreign_keys(1)", p)
+		db, err := sql.Open("sqlite", dsn)
+		if err != nil {
+			lastErr = fmt.Errorf("failed to open sqlite database '%s': %w", p, err)
+			continue
+		}
+
+		// SQLite single-writer optimization
+		db.SetMaxOpenConns(1)
+		db.SetMaxIdleConns(1)
+		db.SetConnMaxLifetime(0)
+
+		if err := db.Ping(); err != nil {
+			_ = db.Close()
+			lastErr = fmt.Errorf("failed to ping sqlite database '%s': %w", p, err)
+			continue
+		}
+
+		cfg.SQLitePath = p
+		return &DB{db: db}, nil
 	}
 
-	// SQLite single-writer optimization
-	db.SetMaxOpenConns(1)
-	db.SetMaxIdleConns(1)
-	db.SetConnMaxLifetime(0)
-
-	if err := db.Ping(); err != nil {
-		return nil, fmt.Errorf("failed to ping sqlite database: %w", err)
-	}
-
-	return &DB{db: db}, nil
+	return nil, lastErr
 }
 
 func (d *DB) Close() error {

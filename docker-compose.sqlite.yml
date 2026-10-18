@@ -10,9 +10,9 @@ services:
       LOG_LEVEL: info
       DATABASE_DRIVER: sqlite
       SQLITE_PATH: /data/authentic.db
-      JWT_SECRET: super-secret-production-jwt-signing-key-minimum-32-bytes
-      ADMIN_EMAIL: admin@authentic-et.dev
-      ADMIN_PASSWORD: admin-password-change-me
+      # First-Time Setup: Leave unconfigured to create your custom admin credentials on initial web launch
+      # ADMIN_EMAIL: admin@yourcompany.com
+      # ADMIN_PASSWORD: your-secure-master-password
       PAYMENT_PROVIDERS_ENABLED: mock,cbe,telebirr,boa,dashen,awash,mpesa
       ALLOW_ORIGINS: "*"
       WORKER_CONCURRENCY: 3
