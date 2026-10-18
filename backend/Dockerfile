@@ -1,5 +1,7 @@
-# Stage 1: Builder
-FROM golang:1.27-alpine AS builder
+# Stage 1: Builder (Native fast cross-compilation)
+FROM --platform=$BUILDPLATFORM golang:1.27-alpine AS builder
+ARG TARGETOS
+ARG TARGETARCH
 
 WORKDIR /app
 
@@ -10,12 +12,12 @@ RUN go mod download
 
 COPY . .
 
-# Compile static binary with optimizations
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
+# Compile static binary with native cross-compilation
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} go build \
     -ldflags="-s -w -extldflags '-static'" \
     -o /app/bin/server ./cmd/server
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} go build \
     -ldflags="-s -w -extldflags '-static'" \
     -o /app/bin/cli ./cmd/cli
 

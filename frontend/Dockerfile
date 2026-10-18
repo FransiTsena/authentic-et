@@ -1,10 +1,10 @@
 # Stage 1: Build static assets
-FROM node:20-alpine AS builder
+FROM --platform=$BUILDPLATFORM node:22-alpine AS builder
 
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
-RUN npm install
+RUN npm ci
 
 COPY . .
 RUN npm run build

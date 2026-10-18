@@ -5,24 +5,26 @@
 # ==============================================================================
 
 # Stage 1: Build React Frontend
-FROM node:20-alpine AS frontend-builder
+FROM --platform=$BUILDPLATFORM node:22-alpine AS frontend-builder
 WORKDIR /build
 COPY frontend/package*.json ./
 RUN npm ci
 COPY frontend/ ./
 RUN npm run build
 
-# Stage 2: Build Go Backend
-FROM golang:1.27-alpine AS backend-builder
+# Stage 2: Build Go Backend (Native fast cross-compilation)
+FROM --platform=$BUILDPLATFORM golang:1.27-alpine AS backend-builder
+ARG TARGETOS
+ARG TARGETARCH
 WORKDIR /build
 RUN apk add --no-cache git ca-certificates tzdata
 COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 COPY backend/ ./
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} go build \
     -ldflags="-s -w -extldflags '-static'" \
     -o /build/bin/authentic-server ./cmd/server
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} go build \
     -ldflags="-s -w -extldflags '-static'" \
     -o /build/bin/authentic-cli ./cmd/cli
 
