@@ -1,13 +1,15 @@
-name: Release Automation
+name: Publish & Release
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*.*.*'
 
 jobs:
-  build-and-publish:
-    name: Build & Publish Release
+  publish-docker:
+    name: Build & Publish Public Docker Images
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -16,26 +18,8 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.22'
-
-      - name: Cross-compile CLI & Server Binaries
-        run: |
-          mkdir -p bin
-          cd opensource/backend
-          # Linux AMD64
-          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${{ github.ref_name }}" -o ../../bin/paygate-server-linux-amd64 ./cmd/server
-          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${{ github.ref_name }}" -o ../../bin/paygate-cli-linux-amd64 ./cmd/cli
-          # Linux ARM64
-          GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${{ github.ref_name }}" -o ../../bin/paygate-server-linux-arm64 ./cmd/server
-          GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${{ github.ref_name }}" -o ../../bin/paygate-cli-linux-arm64 ./cmd/cli
-          # Darwin AMD64 & ARM64
-          GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${{ github.ref_name }}" -o ../../bin/paygate-server-darwin-amd64 ./cmd/server
-          GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${{ github.ref_name }}" -o ../../bin/paygate-server-darwin-arm64 ./cmd/server
-          # Windows AMD64
-          GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${{ github.ref_name }}" -o ../../bin/paygate-server-windows-amd64.exe ./cmd/server
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -47,27 +31,105 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and Push Backend Multi-Arch Image
+      - name: Extract Metadata (Tags, Labels) for Unified Image
+        id: meta-unified
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=sha,prefix=sha-,enable=true
+            type=semver,pattern={{version}}
+
+      - name: Build and Push Unified Full-Stack Image (Port 5151)
         uses: docker/build-push-action@v5
         with:
-          context: ./opensource/backend
+          context: .
+          file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            ghcr.io/${{ github.repository }}/backend:latest
-            ghcr.io/${{ github.repository }}/backend:${{ github.ref_name }}
+          tags: ${{ steps.meta-unified.outputs.tags }}
+          labels: ${{ steps.meta-unified.outputs.labels }}
 
-      - name: Build and Push Frontend Multi-Arch Image
+      - name: Extract Metadata for Standalone Backend Image
+        id: meta-backend
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}-backend
+          tags: |
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=sha,prefix=sha-,enable=true
+            type=semver,pattern={{version}}
+
+      - name: Build and Push Standalone Backend Image (Port 5151)
         uses: docker/build-push-action@v5
         with:
-          context: ./opensource/frontend
+          context: ./backend
+          file: ./backend/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            ghcr.io/${{ github.repository }}/frontend:latest
-            ghcr.io/${{ github.repository }}/frontend:${{ github.ref_name }}
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          labels: ${{ steps.meta-backend.outputs.labels }}
 
-      - name: Create GitHub Release
+      - name: Extract Metadata for Standalone Frontend Image
+        id: meta-frontend
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}-frontend
+          tags: |
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=sha,prefix=sha-,enable=true
+            type=semver,pattern={{version}}
+
+      - name: Build and Push Standalone Frontend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          labels: ${{ steps.meta-frontend.outputs.labels }}
+
+  build-binaries:
+    name: Cross-Compile Standalone Binaries
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache-dependency-path: backend/go.sum
+
+      - name: Cross-compile CLI & Server Binaries
+        run: |
+          mkdir -p bin
+          cd backend
+          VERSION="${{ github.ref_name }}"
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            VERSION="main-$(git rev-parse --short HEAD)"
+          fi
+
+          # Linux AMD64 & ARM64
+          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${VERSION}" -o ../bin/authentic-server-linux-amd64 ./cmd/server
+          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${VERSION}" -o ../bin/authentic-cli-linux-amd64 ./cmd/cli
+          GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${VERSION}" -o ../bin/authentic-server-linux-arm64 ./cmd/server
+          GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${VERSION}" -o ../bin/authentic-cli-linux-arm64 ./cmd/cli
+
+          # macOS (Darwin) AMD64 & ARM64
+          GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${VERSION}" -o ../bin/authentic-server-darwin-amd64 ./cmd/server
+          GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${VERSION}" -o ../bin/authentic-server-darwin-arm64 ./cmd/server
+
+          # Windows AMD64
+          GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${VERSION}" -o ../bin/authentic-server-windows-amd64.exe ./cmd/server
+
+      - name: Publish GitHub Release (On Tagged Release)
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: bin/*
