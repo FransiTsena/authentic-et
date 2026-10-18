@@ -11,12 +11,12 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/beecloud/paygate/internal/api"
-	"github.com/beecloud/paygate/internal/config"
-	"github.com/beecloud/paygate/internal/database"
-	"github.com/beecloud/paygate/internal/provider"
-	"github.com/beecloud/paygate/internal/service"
-	"github.com/beecloud/paygate/internal/worker"
+	"github.com/authentic-et/authentic-et/internal/api"
+	"github.com/authentic-et/authentic-et/internal/config"
+	"github.com/authentic-et/authentic-et/internal/database"
+	"github.com/authentic-et/authentic-et/internal/provider"
+	"github.com/authentic-et/authentic-et/internal/service"
+	"github.com/authentic-et/authentic-et/internal/worker"
 )
 
 func main() {
@@ -111,5 +111,5 @@ func main() {
 		logger.Error("server shutdown error", "error", err)
 	}
 
-	logger.Info("PayGate server exited cleanly")
+	logger.Info("authentic-et server exited cleanly")
 }

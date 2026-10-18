@@ -1,4 +1,4 @@
-module github.com/beecloud/paygate
+module github.com/authentic-et/authentic-et
 
 go 1.27.1
 

@@ -1,6 +1,6 @@
-# PayGate Architecture Specification
+# authentic-et Architecture Specification
 
-PayGate is a standalone, production-grade, open-source payment verification and automated provisioning platform. Designed with low infrastructure requirements and financial correctness as the top priority, PayGate separates verification business logic from underlying database and payment provider implementations.
+authentic-et is a standalone, production-grade, open-source payment verification and automated provisioning platform. Designed with low infrastructure requirements and financial correctness as the top priority, authentic-et separates verification business logic from underlying database and payment provider implementations.
 
 ```mermaid
 flowchart TD
@@ -8,7 +8,7 @@ flowchart TD
     Nginx -->|Static Assets| SPA["React + Vite UI"]
     Nginx -->|/api/v1/| API["Chi HTTP Router (:5151)"]
     
-    subgraph Core ["PayGate Core Backend (Go)"]
+    subgraph Core ["authentic-et Core Backend (Go)"]
         API --> MW["Middleware\n(Logger, ReqID, RateLimiter, Auth)"]
         MW --> H["Handlers\n(Public, Admin, System)"]
         H --> PS["PaymentService\n(State Machine, Claim, Tolerance)"]
@@ -32,7 +32,7 @@ flowchart TD
 
 ## 1. Pluggable Database Architecture
 
-PayGate decouples business logic from persistence using repository interfaces (`internal/domain/repository.go`).
+authentic-et decouples business logic from persistence using repository interfaces (`internal/domain/repository.go`).
 
 ```go
 type PaymentRepository interface {
@@ -57,18 +57,18 @@ type PaymentRepository interface {
 - **Atomic Claiming:** Implements conditional updates `UPDATE payments SET claimed = 1, claimed_by = ?, claimed_at = ? WHERE tx_id = ? AND claimed = 0` returning modified row counts to guarantee single-claim idempotency without row locks.
 
 ### In-Memory Ephemeral Engine (`internal/database/memory`)
-- **Zero-Dependency Fallback:** If no database is configured or connection to external storage fails, PayGate starts immediately in-memory with a visible safety warning.
+- **Zero-Dependency Fallback:** If no database is configured or connection to external storage fails, authentic-et starts immediately in-memory with a visible safety warning.
 - **Thread-Safe Memory Storage:** Employs `sync.RWMutex` maps, transactional snapshots (`memTx` staged mutations), and full conformance with all repository contracts.
 
 ### Dynamic Database Manager (`internal/database/manager.go`)
-- **Zero-Downtime Switching:** Allows operators or developers to point PayGate to an external PostgreSQL or SQLite database directly from the Web UI or REST API without restarting the backend process.
+- **Zero-Downtime Switching:** Allows operators or developers to point authentic-et to an external PostgreSQL or SQLite database directly from the Web UI or REST API without restarting the backend process.
 - **Auto-Migration:** Target databases are automatically migrated on connect, and existing administrator credentials are seeded smoothly.
 
 ---
 
 ## 2. Payment State Machine & Financial Invariants
 
-PayGate enforces an explicit, unidirectional state machine for all payment transactions:
+authentic-et enforces an explicit, unidirectional state machine for all payment transactions:
 
 ```mermaid
 stateDiagram-v2
@@ -86,7 +86,7 @@ stateDiagram-v2
 ### Invariants:
 1. **Uniqueness:** A transaction identifier (`tx_id`) cannot be created more than once (enforced by `UNIQUE(tx_id)` at database level).
 2. **Single Claim Guarantee:** A payment can only transition to `CLAIMED` once. Subsequent claim attempts return `ErrPaymentAlreadyClaimed`.
-3. **Amount Tolerance:** To prevent customer drop-off due to micro-deductions (e.g. bank transfer fees), PayGate supports an asymmetric tolerance window:
+3. **Amount Tolerance:** To prevent customer drop-off due to micro-deductions (e.g. bank transfer fees), authentic-et supports an asymmetric tolerance window:
    $$\text{Required Amount} - 1.00 \le \text{Verified Amount} \le \text{Required Amount} + 5.00$$
 4. **Merchant Account Matching:** The recipient receiver name or account number extracted from provider slips must match the merchant's configured identity (`internal/provider/cleaner.go`).
 
@@ -94,7 +94,7 @@ stateDiagram-v2
 
 ## 3. Durable Provisioning Outbox Pattern
 
-To prevent the **Dual-Write Problem** (where a payment commits to the database but an external provisioning webhook or API call fails), PayGate uses a durable transactional outbox:
+To prevent the **Dual-Write Problem** (where a payment commits to the database but an external provisioning webhook or API call fails), authentic-et uses a durable transactional outbox:
 
 1. **Transactional Enqueue:** When an order is verified or claimed, the payment state change and the provisioning job row are committed in the same database transaction.
 2. **Worker Lease Polling:** The background worker polls for `PENDING` or `FAILED` jobs whose `next_retry_at <= NOW()`.

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/beecloud/paygate/internal/config"
-	"github.com/beecloud/paygate/internal/domain"
+	"github.com/authentic-et/authentic-et/internal/config"
+	"github.com/authentic-et/authentic-et/internal/domain"
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 

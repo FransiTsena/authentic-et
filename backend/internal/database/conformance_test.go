@@ -9,22 +9,22 @@ import (
 	"testing"
 	"time"
 
-	"github.com/beecloud/paygate/internal/config"
-	"github.com/beecloud/paygate/internal/database"
-	"github.com/beecloud/paygate/internal/domain"
+	"github.com/authentic-et/authentic-et/internal/config"
+	"github.com/authentic-et/authentic-et/internal/database"
+	"github.com/authentic-et/authentic-et/internal/domain"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func setupTestSQLite(t *testing.T) (*domain.Repositories, database.Closer) {
-	tempDir, err := os.MkdirTemp("", "paygate_test_*")
+	tempDir, err := os.MkdirTemp("", "authentic_test_*")
 	require.NoError(t, err)
 
 	cfg := &config.Config{
 		DatabaseDriver: "sqlite",
 		SQLitePath:     filepath.Join(tempDir, "test.db"),
-		AdminEmail:     "testadmin@paygate.local",
+		AdminEmail:     "testadmin@authentic-et.local",
 		AdminPassword:  "SecureTestPassword123!",
 	}
 
@@ -43,7 +43,7 @@ func setupTestSQLite(t *testing.T) (*domain.Repositories, database.Closer) {
 func setupTestMemory(t *testing.T) (*domain.Repositories, database.Closer) {
 	cfg := &config.Config{
 		DatabaseDriver: "memory",
-		AdminEmail:     "testadmin@paygate.local",
+		AdminEmail:     "testadmin@authentic-et.local",
 		AdminPassword:  "SecureTestPassword123!",
 	}
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))

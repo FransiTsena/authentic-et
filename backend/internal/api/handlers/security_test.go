@@ -11,11 +11,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/beecloud/paygate/internal/api"
-	"github.com/beecloud/paygate/internal/config"
-	"github.com/beecloud/paygate/internal/database"
-	"github.com/beecloud/paygate/internal/provider"
-	"github.com/beecloud/paygate/internal/service"
+	"github.com/authentic-et/authentic-et/internal/api"
+	"github.com/authentic-et/authentic-et/internal/config"
+	"github.com/authentic-et/authentic-et/internal/database"
+	"github.com/authentic-et/authentic-et/internal/provider"
+	"github.com/authentic-et/authentic-et/internal/service"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -199,7 +199,7 @@ func TestSecurity_InitialAdminSetupWizard(t *testing.T) {
 
 	// 2. Initial registration succeeds and grants admin role
 	adminPayload, _ := json.Marshal(map[string]string{
-		"email":    "owner@paygate.local",
+		"email":    "owner@authentic-et.local",
 		"password": "MasterSecurePassword123!",
 		"name":     "Platform Owner",
 	})

@@ -18,7 +18,7 @@ services:
       DATABASE_DRIVER: sqlite
       SQLITE_PATH: /data/authentic.db
       JWT_SECRET: super-secret-production-jwt-signing-key-minimum-32-bytes
-      ADMIN_EMAIL: admin@paygate.dev
+      ADMIN_EMAIL: admin@authentic-et.dev
       ADMIN_PASSWORD: admin-password-change-me
       PAYMENT_PROVIDERS_ENABLED: mock,cbe,telebirr,boa,dashen,awash,mpesa
       ALLOW_ORIGINS: "*"

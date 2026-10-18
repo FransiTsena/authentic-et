@@ -7,7 +7,7 @@
 [![Release](https://img.shields.io/badge/release-v1.0.0-blue.svg)](https://github.com/beecloud/paygate/releases)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/beecloud/paygate)](https://goreportcard.com/report/github.com/beecloud/paygate)
-[![Docker Image Size](https://img.shields.io/badge/docker%20image-28.4%20MB-success)](https://ghcr.io/beecloud/paygate)
+[![Docker Image Size](https://img.shields.io/badge/docker%20image-28.4%20MB-success)](https://ghcr.io/fransitsena/authentic-et)
 [![RAM Consumption](https://img.shields.io/badge/idle%20RAM-~15%20MB-blueviolet)](docs/BENCHMARKS.md)
 [![Pure Go SQLite](https://img.shields.io/badge/SQLite-Pure%20Go%20(No%20CGO)-blueviolet)](https://modernc.org/sqlite)
 [![App Pod Ready](https://img.shields.io/badge/Kubernetes-App%20Pod%20Ready-326ce5.svg)](docs/DEPLOYMENT.md)
@@ -20,11 +20,11 @@
 
 ---
 
-## 💡 Why PayGate?
+## 💡 Why authentic-et?
 
 Traditional payment verifiers are often tightly coupled to monolithic billing stacks, require heavy runtime containers (Node/Java/Python), demand external MongoDB/Redis servers, and lack strict ACID state machines—leading to race conditions and double-spending vulnerabilities.
 
-| Feature | Legacy Payment Verifiers | **PayGate Platform** |
+| Feature | Legacy Payment Verifiers | **authentic-et Platform** |
 |---|---|---|
 | **Runtime Architecture** | Heavy Node.js / NestJS / JVM | **Static Pure Go Binary** |
 | **Idle Memory (RAM)** | ~185 MB – 500 MB | **~15 MB RAM** (91% lower) |
@@ -49,10 +49,10 @@ Traditional payment verifiers are often tightly coupled to monolithic billing st
   - **M-Pesa Safaricom Ethiopia:** Native B2C/C2B transaction receipt parser with pure Go zlib stream decompression.
   - **Mock Sandbox Rail:** Deterministic test rails with customizable latency, test fixtures, and error simulation.
 - 🔌 **Pluggable Storage Layer:**
-  - **Pure Go SQLite (Default):** Embedded zero-dependency database with WAL mode (`modernc.org/sqlite`, 100% CGO-free). Persisted in `./data/paygate.db`.
+  - **Pure Go SQLite (Default):** Embedded zero-dependency database with WAL mode (`modernc.org/sqlite`, 100% CGO-free). Persisted in `./data/authentic.db`.
   - **PostgreSQL 16:** Production-scale clustered storage with connection pooling and horizontal worker concurrency.
   - **In-Memory Ephemeral Mode:** Automatic zero-crash fallback with safety warnings if requested.
-  - **Live Database Switching:** Point PayGate to an external database directly from the Web Admin UI at runtime without server restarts!
+  - **Live Database Switching:** Point authentic-et to an external database directly from the Web Admin UI at runtime without server restarts!
 - 📬 **Durable Provisioning Outbox:** Transactional outbox worker guarantees zero lost orders between payment confirmation and cloud service provisioning, complete with lease locking, exponential backoff retries, and HMAC-SHA256 signed webhooks.
 - ⚙️ **Preset Keys & Headless Mode:** Run as a pure API microservice without UI overhead (`DISABLE_UI=true`) and configure static keys via environment variables (`API_KEY`, `PRESET_API_KEYS`, `MASTER_TOKEN`).
 - 💻 **Modern Administrative & Developer Console:**
@@ -70,7 +70,7 @@ Traditional payment verifiers are often tightly coupled to monolithic billing st
 flowchart TD
     Client["Client / Merchant Service"] -->|HTTPS / REST| Ingress["Ingress / Nginx / Direct (:5151)"]
     
-    subgraph Core ["PayGate Core Engine (Go)"]
+    subgraph Core ["authentic-et Core Engine (Go)"]
         Ingress --> MW["Middleware: RateLimiter, ReqID, Auth, CORS"]
         MW --> Router["Chi HTTP Router"]
         Router --> PS["PaymentService\n(State Machine, Claim, Tolerance)"]
@@ -111,22 +111,22 @@ stateDiagram-v2
 
 ### 1. Standalone Instant Start (Zero Database Server Needed)
 
-Run PayGate out-of-the-box with **zero database configuration**. It automatically uses embedded pure Go SQLite (or runs in-memory with a safety warning) and serves both the React Web UI and API:
+Run authentic-et out-of-the-box with **zero database configuration**. It automatically uses embedded pure Go SQLite (or runs in-memory with a safety warning) and serves both the React Web UI and API:
 
 ```bash
 # Clone the repository
 git clone https://github.com/beecloud/paygate.git
-cd paygate
+cd authentic-et
 
 # Start standalone stack
 docker compose up --build -d
 ```
 
 - **Web Dashboard:** `http://localhost:3000` (or `http://localhost:5151`)
-- **Default Login:** `admin@paygate.dev` / `admin-password-change-me`
+- **Default Login:** `admin@authentic-et.dev` / `admin-password-change-me`
 - **REST API:** `http://localhost:5151/api/v1`
 
-> 💡 **Connect Your Existing Database:** Once the dashboard opens, navigate to the **Database** tab to connect PayGate to your existing PostgreSQL or SQLite database dynamically!
+> 💡 **Connect Your Existing Database:** Once the dashboard opens, navigate to the **Database** tab to connect authentic-et to your existing PostgreSQL or SQLite database dynamically!
 
 ---
 
@@ -228,26 +228,26 @@ curl -X POST http://localhost:5151/api/v1/public/payment/verify \
 
 ---
 
-## 🛠️ Command-Line Interface (`paygate-cli`)
+## 🛠️ Command-Line Interface (`authentic-cli`)
 
-PayGate includes a companion CLI for administration and zero-downtime database engine migrations:
+authentic-et includes a companion CLI for administration and zero-downtime database engine migrations:
 
 ```bash
-cd backend && go build -o paygate-cli ./cmd/cli
+cd backend && go build -o authentic-cli ./cmd/cli
 ```
 
 ### Create Administrator
 ```bash
-./paygate-cli create-admin --email=ops@example.com --password="SecurePassword123!"
+./authentic-cli create-admin --email=ops@example.com --password="SecurePassword123!"
 ```
 
 ### Lossless Data Export & Import (SQLite $\leftrightarrow$ PostgreSQL)
 ```bash
 # Export complete snapshot from SQLite
-./paygate-cli export-data --driver=sqlite --sqlite-path=/data/paygate.db --output=backup.json
+./authentic-cli export-data --driver=sqlite --sqlite-path=/data/authentic.db --output=backup.json
 
 # Import into production PostgreSQL
-./paygate-cli import-data --driver=postgres --database-url="postgres://user:pass@host:5432/db" --input=backup.json
+./authentic-cli import-data --driver=postgres --database-url="postgres://user:pass@host:5432/db" --input=backup.json
 ```
 
 ---
@@ -259,12 +259,12 @@ cd backend && go build -o paygate-cli ./cmd/cli
 | `PORT` | `5151` | Port for the HTTP API server |
 | `DATABASE_DRIVER` | `postgres` | Persistence driver: `postgres`, `sqlite`, or `memory` |
 | `DATABASE_URL` | - | PostgreSQL connection DSN (required if `DATABASE_DRIVER=postgres`) |
-| `SQLITE_PATH` | `/data/paygate.db` | File path for SQLite database (required if `DATABASE_DRIVER=sqlite`) |
+| `SQLITE_PATH` | `/data/authentic.db` | File path for SQLite database (required if `DATABASE_DRIVER=sqlite`) |
 | `API_KEY` / `PRESET_API_KEYS` | - | Preset static API keys for headless usage without web UI |
 | `MASTER_TOKEN` | - | Static administrator access token for scripts and automation |
 | `DISABLE_UI` | `false` | Run in pure headless API mode without serving React frontend |
 | `JWT_SECRET` | - | HMAC-SHA256 key for signing admin JWT tokens (min 32 bytes) |
-| `ADMIN_EMAIL` | `admin@paygate.dev` | Initial admin user email (seeded automatically on startup) |
+| `ADMIN_EMAIL` | `admin@authentic-et.dev` | Initial admin user email (seeded automatically on startup) |
 | `ADMIN_PASSWORD` | `admin-password-change-me` | Initial admin user password |
 | `PAYMENT_PROVIDERS_ENABLED` | `mock,cbe,telebirr,boa` | Active payment provider rails |
 | `UNDERPAY_TOLERANCE_ETB` | `1.0` | Allowed underpayment tolerance (-1.00 ETB for bank fees) |
@@ -282,7 +282,7 @@ cd backend && go build -o paygate-cli ./cmd/cli
 
 ### 🧹 Automated Data Retention & Safety Guarantees
 
-PayGate includes an enterprise data retention lifecycle engine designed around financial correctness:
+authentic-et includes an enterprise data retention lifecycle engine designed around financial correctness:
 
 1. **Active Verification Window Safety:** Pending payments are never prematurely purged. Payments exceeding `UNCLAIMED_EXPIRY_HOURS` (default 72h) are transitioned to `EXPIRED` before becoming eligible for deletion via `FAILED_RETENTION_DAYS`.
 2. **Batch & Engine Portability:** Cleanup queries execute cleanly across PostgreSQL, SQLite, and In-Memory without locking transaction tables or blocking WAL readers.
@@ -317,10 +317,10 @@ We welcome contributions! Please review our [Contributing Guidelines](CONTRIBUTI
 
 ## 🔒 Security
 
-For security vulnerabilities, please refer to our [Security Policy](SECURITY.md) and contact [security@paygate.dev](mailto:security@paygate.dev).
+For security vulnerabilities, please refer to our [Security Policy](SECURITY.md) and contact [security@authentic-et.dev](mailto:security@authentic-et.dev).
 
 ---
 
 ## 📄 License
 
-PayGate is open-source software licensed under the [Apache License 2.0](LICENSE).
+authentic-et is open-source software licensed under the [Apache License 2.0](LICENSE).

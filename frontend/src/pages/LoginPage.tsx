@@ -178,7 +178,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
             'Please wait...'
           ) : isSetupMode ? (
             <>
-              <Sparkles className="w-4 h-4" /> Initialize PayGate & Launch
+              <Sparkles className="w-4 h-4" /> Initialize authentic-et & Launch
             </>
           ) : isRegister ? (
             <>

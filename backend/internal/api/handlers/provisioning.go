@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/beecloud/paygate/internal/service"
+	"github.com/authentic-et/authentic-et/internal/service"
 	"github.com/go-chi/chi/v5"
 )
 

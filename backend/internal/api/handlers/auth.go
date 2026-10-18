@@ -3,8 +3,8 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/beecloud/paygate/internal/api/middleware"
-	"github.com/beecloud/paygate/internal/service"
+	"github.com/authentic-et/authentic-et/internal/api/middleware"
+	"github.com/authentic-et/authentic-et/internal/service"
 )
 
 type AuthHandler struct {

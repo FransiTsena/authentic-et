@@ -3,7 +3,7 @@ package domain_test
 import (
 	"testing"
 
-	"github.com/beecloud/paygate/internal/domain"
+	"github.com/authentic-et/authentic-et/internal/domain"
 	"github.com/stretchr/testify/assert"
 )
 

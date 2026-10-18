@@ -11,9 +11,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/beecloud/paygate/internal/config"
-	"github.com/beecloud/paygate/internal/domain"
-	"github.com/beecloud/paygate/internal/service"
+	"github.com/authentic-et/authentic-et/internal/config"
+	"github.com/authentic-et/authentic-et/internal/domain"
+	"github.com/authentic-et/authentic-et/internal/service"
 	"github.com/google/uuid"
 )
 

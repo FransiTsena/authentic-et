@@ -1,6 +1,6 @@
-# PayGate Security & Threat Model
+# authentic-et Security & Threat Model
 
-This document outlines the security architecture, trust boundaries, threat vectors, and protective countermeasures implemented in PayGate.
+This document outlines the security architecture, trust boundaries, threat vectors, and protective countermeasures implemented in authentic-et.
 
 ---
 
@@ -11,7 +11,7 @@ flowchart LR
     Untrusted[Untrusted Internet / Public Clients] -->|Boundary 1: Rate Limiter & Input Sanitizer| PublicAPI["Public API (/verify, /claim)"]
     Admin[Admin User] -->|Boundary 2: JWT Auth (HMAC-SHA256)| AdminAPI["Admin API (/admin/*)"]
     Merchant[Merchant Service] -->|Boundary 3: SHA-256 API Key| MerchantAPI["Merchant Integration"]
-    Core[PayGate Core] -->|Boundary 4: HMAC Webhook Signature| Downstream[Downstream Provisioning Systems]
+    Core[authentic-et Core] -->|Boundary 4: HMAC Webhook Signature| Downstream[Downstream Provisioning Systems]
     Core -->|Boundary 5: Isolated Adapter Interface| DB[(PostgreSQL / SQLite)]
 ```
 
@@ -36,8 +36,8 @@ flowchart LR
 ### 2.3 Webhook Interception & Replay Attacks
 - **Threat:** A malicious middleman intercepts downstream provisioning notifications or replays old webhook events to re-provision cloud resources.
 - **Countermeasure:**
-  1. PayGate calculates an `X-PayGate-Signature` header using `HMAC-SHA256(payload, webhook_secret)`.
-  2. PayGate includes `X-PayGate-Timestamp` in each webhook delivery. Downstream receivers must enforce a maximum 5-minute skew window.
+  1. authentic-et calculates an `X-authentic-et-Signature` header using `HMAC-SHA256(payload, webhook_secret)`.
+  2. authentic-et includes `X-authentic-et-Timestamp` in each webhook delivery. Downstream receivers must enforce a maximum 5-minute skew window.
   3. Every job contains an idempotent `id` and `order_id` so downstream consumers can reject duplicates.
 
 ### 2.4 Denial of Service & Brute-Force Attacks

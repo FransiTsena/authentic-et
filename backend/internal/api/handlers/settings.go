@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/beecloud/paygate/internal/config"
-	"github.com/beecloud/paygate/internal/worker"
+	"github.com/authentic-et/authentic-et/internal/config"
+	"github.com/authentic-et/authentic-et/internal/worker"
 )
 
 type SettingsHandler struct {

@@ -28,15 +28,15 @@ class APIClient {
   private token: string | null = null;
 
   constructor() {
-    this.token = localStorage.getItem('paygate_token');
+    this.token = localStorage.getItem('authentic_token');
   }
 
   setToken(token: string | null) {
     this.token = token;
     if (token) {
-      localStorage.setItem('paygate_token', token);
+      localStorage.setItem('authentic_token', token);
     } else {
-      localStorage.removeItem('paygate_token');
+      localStorage.removeItem('authentic_token');
     }
   }
 
@@ -62,7 +62,7 @@ class APIClient {
 
     if (response.status === 401 && !path.includes('/auth/login')) {
       this.setToken(null);
-      window.dispatchEvent(new CustomEvent('paygate_auth_expired'));
+      window.dispatchEvent(new CustomEvent('authentic_auth_expired'));
     }
 
     if (!response.ok) {

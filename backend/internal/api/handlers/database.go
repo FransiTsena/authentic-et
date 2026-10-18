@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/beecloud/paygate/internal/config"
-	"github.com/beecloud/paygate/internal/database"
-	"github.com/beecloud/paygate/internal/worker"
+	"github.com/authentic-et/authentic-et/internal/config"
+	"github.com/authentic-et/authentic-et/internal/database"
+	"github.com/authentic-et/authentic-et/internal/worker"
 )
 
 type DatabaseHandler struct {

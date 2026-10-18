@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/beecloud/paygate/internal/config"
-	"github.com/beecloud/paygate/internal/domain"
+	"github.com/authentic-et/authentic-et/internal/config"
+	"github.com/authentic-et/authentic-et/internal/domain"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -267,7 +267,7 @@ func (s *AuthService) persistLocalEnv(adminEmail string) {
 		newLines = append(newLines, "DATABASE_DRIVER=sqlite")
 	}
 	if !hasSQLitePath {
-		newLines = append(newLines, "SQLITE_PATH=./data/paygate.db")
+		newLines = append(newLines, "SQLITE_PATH=./data/authentic.db")
 	}
 
 	finalContent := strings.Join(newLines, "\n")

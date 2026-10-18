@@ -7,10 +7,10 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/beecloud/paygate/internal/config"
-	"github.com/beecloud/paygate/internal/database/postgres"
-	"github.com/beecloud/paygate/internal/database/sqlite"
-	"github.com/beecloud/paygate/internal/domain"
+	"github.com/authentic-et/authentic-et/internal/config"
+	"github.com/authentic-et/authentic-et/internal/database/postgres"
+	"github.com/authentic-et/authentic-et/internal/database/sqlite"
+	"github.com/authentic-et/authentic-et/internal/domain"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )

@@ -1,6 +1,6 @@
 # Security Policy
 
-The PayGate team takes security, transaction integrity, and financial data protection extremely seriously. We appreciate the responsible disclosure of vulnerabilities by security researchers and the open-source community.
+The authentic-et team takes security, transaction integrity, and financial data protection extremely seriously. We appreciate the responsible disclosure of vulnerabilities by security researchers and the open-source community.
 
 ---
 
@@ -21,14 +21,14 @@ We release security patches for the following versions:
 
 If you discover a vulnerability related to payment verification, state machine bypassing, double-spending, timing attacks, authentication bypass, or data leakage, please report it via our responsible disclosure channel:
 
-* **Email:** [security@paygate.dev](mailto:security@paygate.dev)
-* **Subject:** `[SECURITY] PayGate Vulnerability Report - <Brief Description>`
+* **Email:** [security@authentic-et.dev](mailto:security@authentic-et.dev)
+* **Subject:** `[SECURITY] authentic-et Vulnerability Report - <Brief Description>`
 * **PGP Key:** Available upon request or via keyserver.
 
 ### What to Include in Your Report:
 1. **Description:** Clear explanation of the potential vulnerability and its impact.
 2. **Reproduction Steps:** Step-by-step instructions, cURL commands, or a minimal proof-of-concept (PoC) script.
-3. **Environment:** Operating system, Go version, database engine (PostgreSQL, SQLite, or In-Memory), and PayGate version.
+3. **Environment:** Operating system, Go version, database engine (PostgreSQL, SQLite, or In-Memory), and authentic-et version.
 4. **Suggested Remediation:** If known, recommendations for resolving the issue.
 
 ---
@@ -45,7 +45,7 @@ When a report is received, the maintainers will:
 
 ## 4. Built-in Security Safeguards
 
-PayGate includes multi-layered defenses by design:
+authentic-et includes multi-layered defenses by design:
 
 * **Anti-Double-Spending:** Unique database constraints on transaction IDs coupled with atomic conditional updates (`WHERE claimed = 0` / `FOR UPDATE SKIP LOCKED`).
 * **Timing-Safe Authentication:** All API keys and HMAC signatures are validated using `crypto/subtle.ConstantTimeCompare` to mitigate timing side-channel attacks.

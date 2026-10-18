@@ -3,35 +3,35 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: paygate-backend-sqlite
+    container_name: authentic-backend-sqlite
     restart: unless-stopped
     environment:
-      PORT: 8080
+      PORT: 5151
       LOG_LEVEL: info
       DATABASE_DRIVER: sqlite
-      SQLITE_PATH: /data/paygate.db
+      SQLITE_PATH: /data/authentic.db
       JWT_SECRET: super-secret-production-jwt-signing-key-minimum-32-bytes
-      ADMIN_EMAIL: admin@paygate.dev
+      ADMIN_EMAIL: admin@authentic-et.dev
       ADMIN_PASSWORD: admin-password-change-me
-      PAYMENT_PROVIDERS_ENABLED: mock,cbe,telebirr,boa
+      PAYMENT_PROVIDERS_ENABLED: mock,cbe,telebirr,boa,dashen,awash,mpesa
       ALLOW_ORIGINS: "*"
       WORKER_CONCURRENCY: 3
       WORKER_POLL_INTERVAL: 3s
     volumes:
       - sqlite_data:/data
     ports:
-      - "8080:8080"
+      - "5151:5151"
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: paygate-frontend-sqlite
+    container_name: authentic-frontend-sqlite
     restart: unless-stopped
     depends_on:
       - backend
     ports:
-      - "3000:80"
+      - "5152:80"
 
 volumes:
   sqlite_data:

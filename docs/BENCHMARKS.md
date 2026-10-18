@@ -1,12 +1,12 @@
-# PayGate Performance & Resource Benchmarks
+# authentic-et Performance & Resource Benchmarks
 
-This document compares the operational characteristics and resource footprints of **PayGate (Go + Pure SQLite / PostgreSQL)** against the **Legacy BeeCloud Payment Verifier (Node.js/Nest.js + MongoDB + Redis)**.
+This document compares the operational characteristics and resource footprints of **authentic-et (Go + Pure SQLite / PostgreSQL)** against the **Legacy BeeCloud Payment Verifier (Node.js/Nest.js + MongoDB + Redis)**.
 
 ---
 
 ## 1. Resource Consumption & Footprint
 
-| Metric | Legacy BeeCloud (Node.js) | PayGate (Go + SQLite) | PayGate (Go + PostgreSQL) | Improvement |
+| Metric | Legacy BeeCloud (Node.js) | authentic-et (Go + SQLite) | authentic-et (Go + PostgreSQL) | Improvement |
 |---|---|---|---|---|
 | **Binary / Image Size** | 385 MB (Node runtime + deps) | 28.4 MB (Alpine static binary) | 28.4 MB + Postgres Alpine | **92.6% reduction** |
 | **Idle Memory (RAM)** | ~185 MB | ~14.8 MB | ~16.2 MB (+ PG shared buffers) | **91.2% lower RAM** |

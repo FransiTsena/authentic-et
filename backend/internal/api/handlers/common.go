@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/beecloud/paygate/internal/domain"
+	"github.com/authentic-et/authentic-et/internal/domain"
 )
 
 func WriteJSON(w http.ResponseWriter, status int, data any) {

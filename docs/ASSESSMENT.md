@@ -4,13 +4,13 @@
 
 This assessment evaluates the payment verification, billing, and provisioning architecture in the BeeCloud codebase (`apps/backend` and `apps/frontend`). The existing system connects customer payments across Ethiopian payment rails (Commercial Bank of Ethiopia, Telebirr, Bank of Abyssinia) to automated service activation.
 
-The objective is to extract, decouple, and transform this system into a standalone, production-grade, open-source platform written in **Go**, **React**, **TypeScript**, and **PostgreSQL** (with optional **SQLite** support), named **PayGate**.
+The objective is to extract, decouple, and transform this system into a standalone, production-grade, open-source platform written in **Go**, **React**, **TypeScript**, and **PostgreSQL** (with optional **SQLite** support), named **authentic-et**.
 
 ---
 
 ## 2. Existing Architecture & Dependencies
 
-| Area | Current Implementation | Target Open-Source Platform (PayGate) |
+| Area | Current Implementation | Target Open-Source Platform (authentic-et) |
 |---|---|---|
 | **Runtime & Language** | NestJS (TypeScript / Node.js 20+) | Go 1.22+ (Multi-stage minimal binary, ~25MB image) |
 | **Database** | MongoDB / Mongoose ODM (`ObjectId`, schema hooks) | Pluggable SQL: PostgreSQL default (`pgx/v5`), SQLite (`modernc.org/sqlite`) |
@@ -54,7 +54,7 @@ The objective is to extract, decouple, and transform this system into a standalo
 ## 4. Identified Defects, Security Weaknesses & Tech Debt
 
 1. **Artificial Metrics Inflation**:
-   In `PaymentGatewayService.getVerificationStats()`, statistics were artificially inflated (`totalVerifications + 1250`, `successfulVerifications + 1235`). In PayGate, all statistics will be genuine, computed from actual database records.
+   In `PaymentGatewayService.getVerificationStats()`, statistics were artificially inflated (`totalVerifications + 1250`, `successfulVerifications + 1235`). In authentic-et, all statistics will be genuine, computed from actual database records.
 2. **In-Memory Rate Limiting**:
    The existing system used `Map<string, ...>` for rate limiting and daily quotas. Multiple server instances did not share quota state, and restarts wiped out usage counters.
 3. **Tight Coupling to MongoDB**:

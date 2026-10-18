@@ -7,7 +7,7 @@ import (
 const openAPISpecJSON = `{
   "openapi": "3.0.3",
   "info": {
-    "title": "PayGate: Open-Source Payment Verification & Provisioning Platform",
+    "title": "authentic-et: Open-Source Payment Verification & Provisioning Platform",
     "version": "1.0.0",
     "description": "Production-grade, secure, multi-provider payment verification and automated service provisioning platform."
   },

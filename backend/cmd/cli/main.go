@@ -9,9 +9,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/beecloud/paygate/internal/config"
-	"github.com/beecloud/paygate/internal/database"
-	"github.com/beecloud/paygate/internal/domain"
+	"github.com/authentic-et/authentic-et/internal/config"
+	"github.com/authentic-et/authentic-et/internal/database"
+	"github.com/authentic-et/authentic-et/internal/domain"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -79,7 +79,7 @@ func main() {
 
 	case "export-data":
 		fs := flag.NewFlagSet("export-data", flag.ExitOnError)
-		outFile := fs.String("out", "paygate_export.json", "Output JSON export file")
+		outFile := fs.String("out", "authentic_export.json", "Output JSON export file")
 		_ = fs.Parse(os.Args[2:])
 
 		repos, closer, err := database.Initialize(ctx, cfg, logger)
@@ -123,7 +123,7 @@ func main() {
 
 	case "import-data":
 		fs := flag.NewFlagSet("import-data", flag.ExitOnError)
-		inFile := fs.String("in", "paygate_export.json", "Input JSON file to import")
+		inFile := fs.String("in", "authentic_export.json", "Input JSON file to import")
 		_ = fs.Parse(os.Args[2:])
 
 		fileBytes, err := os.ReadFile(*inFile)
@@ -177,7 +177,7 @@ func main() {
 }
 
 func printUsage() {
-	fmt.Println(`PayGate CLI Utility
+	fmt.Println(`authentic-et CLI Utility
 
 Usage:
   cli create-admin --email <email> --password <pass> [--name <name>]
@@ -186,11 +186,11 @@ Usage:
 
 Examples:
   # Create an admin user
-  cli create-admin --email admin@paygate.local --password MySecretPassword123
+  cli create-admin --email admin@authentic-et.local --password MySecretPassword123
 
   # Export database to JSON for database switching (SQLite -> PostgreSQL)
-  DATABASE_DRIVER=sqlite SQLITE_PATH=./data/paygate.db cli export-data --out data_backup.json
+  DATABASE_DRIVER=sqlite SQLITE_PATH=./data/authentic.db cli export-data --out data_backup.json
 
   # Import database into PostgreSQL
-  DATABASE_DRIVER=postgres DATABASE_URL=postgres://user:pass@localhost/paygate cli import-data --in data_backup.json`)
+  DATABASE_DRIVER=postgres DATABASE_URL=postgres://user:pass@localhost/authentic cli import-data --in data_backup.json`)
 }

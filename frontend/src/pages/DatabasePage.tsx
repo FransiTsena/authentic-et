@@ -28,7 +28,7 @@ export const DatabasePage: React.FC = () => {
 
   // Form states
   const [postgresUrl, setPostgresUrl] = useState('');
-  const [sqlitePath, setSqlitePath] = useState('./data/paygate.db');
+  const [sqlitePath, setSqlitePath] = useState('./data/authentic.db');
 
   // Test & configure states
   const [testing, setTesting] = useState(false);
@@ -149,7 +149,7 @@ export const DatabasePage: React.FC = () => {
               'No persistent database is currently connected. Transactions, API keys, and audit logs are retained in memory and will NOT persist across restarts!'}
           </p>
           <div className="text-amber-400 font-semibold">
-            Recommended Action: Switch to the default SQLite path (./data/paygate.db) or connect to your external PostgreSQL server below.
+            Recommended Action: Switch to the default SQLite path (./data/authentic.db) or connect to your external PostgreSQL server below.
           </div>
         </div>
       )}
@@ -280,11 +280,11 @@ export const DatabasePage: React.FC = () => {
                 type="text"
                 value={sqlitePath}
                 onChange={(e) => setSqlitePath(e.target.value)}
-                placeholder="./data/paygate.db"
+                placeholder="./data/authentic.db"
                 className="w-full px-3 py-2 bg-black/40 border border-white/[0.08] rounded-lg text-xs text-white font-mono focus:outline-none focus:border-[#00D26A]"
               />
               <p className="text-[11px] text-slate-500">
-                Default: <code>./data/paygate.db</code>. The directory and file are created automatically if missing.
+                Default: <code>./data/authentic.db</code>. The directory and file are created automatically if missing.
               </p>
             </div>
           ) : (
@@ -294,7 +294,7 @@ export const DatabasePage: React.FC = () => {
                 type="text"
                 value={postgresUrl}
                 onChange={(e) => setPostgresUrl(e.target.value)}
-                placeholder="postgres://user:password@localhost:5432/paygate?sslmode=disable"
+                placeholder="postgres://user:password@localhost:5432/authentic?sslmode=disable"
                 className="w-full px-3 py-2 bg-black/40 border border-white/[0.08] rounded-lg text-xs text-white font-mono focus:outline-none focus:border-[#00D26A]"
               />
               <p className="text-[11px] text-slate-500">
@@ -491,7 +491,7 @@ export const DatabasePage: React.FC = () => {
           Full Clustered Production Stack: docker-compose-full.yml
         </h3>
         <p className="text-xs text-slate-400">
-          To launch PayGate with a dedicated PostgreSQL 16 server, automated persistent volumes, reports storage, and background worker queues, run:
+          To launch authentic-et with a dedicated PostgreSQL 16 server, automated persistent volumes, reports storage, and background worker queues, run:
         </p>
         <pre className="bg-black/40 p-3 rounded-lg font-mono text-xs text-[#00D26A] overflow-x-auto border border-white/[0.04]">
           docker compose -f docker-compose-full.yml up --build -d

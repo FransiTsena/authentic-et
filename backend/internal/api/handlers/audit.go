@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/beecloud/paygate/internal/domain"
+	"github.com/authentic-et/authentic-et/internal/domain"
 )
 
 type AuditHandler struct {

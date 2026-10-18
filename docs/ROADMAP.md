@@ -1,6 +1,6 @@
-# PayGate Project Roadmap
+# authentic-et Project Roadmap
 
-This document outlines the planned architectural milestones, provider rails, and feature expansions for **PayGate**.
+This document outlines the planned architectural milestones, provider rails, and feature expansions for **authentic-et**.
 
 ---
 
@@ -14,7 +14,7 @@ This document outlines the planned architectural milestones, provider rails, and
 - [x] Transactional durable outbox worker with lease locking (`SKIP LOCKED`) and HMAC-SHA256 signed webhooks.
 - [x] Preset static API keys (`API_KEY`, `PRESET_API_KEYS`, `MASTER_TOKEN`) and headless mode (`DISABLE_UI=true`).
 - [x] Modern React 18 + TypeScript admin dashboard with interactive Developer Playground.
-- [x] `paygate-cli` utility for lossless data export/import and admin seeding.
+- [x] `authentic-cli` utility for lossless data export/import and admin seeding.
 - [x] Full Docker Compose (`docker-compose-full.yml`), embedded SQLite compose, and all-in-one single container image.
 - [x] Native BeeCloud 1-Click & Kubernetes App Pod deployment integration (`supportsAppPods: true`).
 

@@ -13,8 +13,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/beecloud/paygate/internal/config"
-	"github.com/beecloud/paygate/internal/domain"
+	"github.com/authentic-et/authentic-et/internal/config"
+	"github.com/authentic-et/authentic-et/internal/domain"
 	"github.com/google/uuid"
 )
 
@@ -203,8 +203,8 @@ func (s *ProvisioningService) deliverHTTPWebhook(ctx context.Context, targetURL 
 	signature := hex.EncodeToString(mac.Sum(nil))
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("User-Agent", "PayGate-Provisioning-Worker/1.0")
-	req.Header.Set("X-PayGate-Signature", "sha256="+signature)
+	req.Header.Set("User-Agent", "Authentic-ET-Provisioning-Worker/1.0")
+	req.Header.Set("X-Authentic-Signature", "sha256="+signature)
 
 	resp, err := s.client.Do(req)
 	if err != nil {

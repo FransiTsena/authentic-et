@@ -3,7 +3,7 @@ package provider_test
 import (
 	"testing"
 
-	"github.com/beecloud/paygate/internal/provider"
+	"github.com/authentic-et/authentic-et/internal/provider"
 	"github.com/stretchr/testify/assert"
 )
 

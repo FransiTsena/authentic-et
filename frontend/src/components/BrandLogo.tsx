@@ -8,7 +8,7 @@ interface BrandLogoProps {
 }
 
 /**
- * PayGate Minimalist Brand Logo
+ * authentic-et Minimalist Brand Logo
  * Flat, ultra-clean vector logo inspired by Upick's aerodynamic swoop curves,
  * customized for payment verification with zero artificial shadows or borders.
  */

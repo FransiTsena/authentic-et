@@ -1,6 +1,6 @@
-# PayGate REST API Reference
+# authentic-et REST API Reference
 
-The PayGate platform provides a versioned REST API rooted at `/api/v1`. An interactive OpenAPI 3.0 specification is available at `/api/v1/openapi.json`.
+The authentic-et platform provides a versioned REST API rooted at `/api/v1`. An interactive OpenAPI 3.0 specification is available at `/api/v1/openapi.json`.
 
 ---
 
@@ -10,7 +10,7 @@ The PayGate platform provides a versioned REST API rooted at `/api/v1`. An inter
 |---|---|---|
 | `Authorization: Bearer <jwt>` | Standard JWT token returned from `/api/v1/admin/auth/login` | Admin endpoints (`/api/v1/admin/*`) |
 | `X-API-Key: sk_pv_...` | SHA-256 validated merchant secret key | Merchant programmatic endpoints |
-| `X-Request-ID: <uuid>` | Optional client-generated correlation ID (PayGate generates one if omitted) | All endpoints |
+| `X-Request-ID: <uuid>` | Optional client-generated correlation ID (authentic-et generates one if omitted) | All endpoints |
 
 ---
 
@@ -30,7 +30,7 @@ GET /api/v1/public/database/status
   "isEphemeral": false,
   "warningMessage": "",
   "connected": true,
-  "maskedDsn": "postgres://paygate:******@localhost:5432/paygate?sslmode=disable",
+  "maskedDsn": "postgres://authentic:******@localhost:5432/authentic?sslmode=disable",
   "connectedAt": "2026-10-18T10:00:00Z"
 }
 ```
@@ -45,7 +45,7 @@ Content-Type: application/json
 
 {
   "driver": "postgres",
-  "dsn": "postgres://user:password@external-db.example.com:5432/paygate?sslmode=require"
+  "dsn": "postgres://user:password@external-db.example.com:5432/authentic?sslmode=require"
 }
 ```
 
@@ -59,7 +59,7 @@ Content-Type: application/json
 
 {
   "driver": "postgres",
-  "dsn": "postgres://user:password@external-db.example.com:5432/paygate?sslmode=require"
+  "dsn": "postgres://user:password@external-db.example.com:5432/authentic?sslmode=require"
 }
 ```
 
@@ -139,13 +139,13 @@ Content-Type: application/json
 
 ## 3. Provisioning Webhooks & Signature Verification
 
-When a payment is confirmed or an order is claimed, PayGate dispatches a signed HTTP POST to the configured webhook URL.
+When a payment is confirmed or an order is claimed, authentic-et dispatches a signed HTTP POST to the configured webhook URL.
 
 ### Webhook Headers
 ```http
-X-PayGate-Signature: 7c5417e923e2a05cf4b2d3e9112850989cb51034c4424364be73e5bf0641be2a
-X-PayGate-Timestamp: 1729245600
-X-PayGate-Delivery: deliv_77123
+X-authentic-et-Signature: 7c5417e923e2a05cf4b2d3e9112850989cb51034c4424364be73e5bf0641be2a
+X-authentic-et-Timestamp: 1729245600
+X-authentic-et-Delivery: deliv_77123
 ```
 
 ### Signature Verification Code Snippet (Node.js)

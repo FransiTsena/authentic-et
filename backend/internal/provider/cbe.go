@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/beecloud/paygate/internal/domain"
+	"github.com/authentic-et/authentic-et/internal/domain"
 )
 
 type CBEProvider struct {

@@ -9,11 +9,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/beecloud/paygate/internal/config"
-	"github.com/beecloud/paygate/internal/database/memory"
-	"github.com/beecloud/paygate/internal/database/postgres"
-	"github.com/beecloud/paygate/internal/database/sqlite"
-	"github.com/beecloud/paygate/internal/domain"
+	"github.com/authentic-et/authentic-et/internal/config"
+	"github.com/authentic-et/authentic-et/internal/database/memory"
+	"github.com/authentic-et/authentic-et/internal/database/postgres"
+	"github.com/authentic-et/authentic-et/internal/database/sqlite"
+	"github.com/authentic-et/authentic-et/internal/domain"
 )
 
 type DBStatus struct {
@@ -96,7 +96,7 @@ func (m *Manager) Initialize(ctx context.Context) error {
 	case "sqlite":
 		initErr = m.initSQLite(ctx, m.cfg.SQLitePath)
 	case "memory", "none":
-		m.initMemory(ctx, "PayGate is running in IN-MEMORY EPHEMERAL mode. Records will NOT persist across restarts.")
+		m.initMemory(ctx, "authentic-et is running in IN-MEMORY EPHEMERAL mode. Records will NOT persist across restarts.")
 		return nil
 	default:
 		initErr = fmt.Errorf("unsupported database driver: %s", targetDriver)
@@ -104,7 +104,7 @@ func (m *Manager) Initialize(ctx context.Context) error {
 
 	if initErr != nil {
 		// Log loud warning and fall back to memory
-		warnMsg := fmt.Sprintf("⚠️  WARNING: Database connection to '%s' failed (%v). Falling back to IN-MEMORY EPHEMERAL storage mode. Server will remain fully functional, but records will NOT persist across restarts! You can point PayGate to your existing database at any time from the Web Admin dashboard under Settings -> Database.", targetDriver, initErr)
+		warnMsg := fmt.Sprintf("⚠️  WARNING: Database connection to '%s' failed (%v). Falling back to IN-MEMORY EPHEMERAL storage mode. Server will remain fully functional, but records will NOT persist across restarts! You can point authentic-et to your existing database at any time from the Web Admin dashboard under Settings -> Database.", targetDriver, initErr)
 		m.logger.Warn(warnMsg)
 
 		m.mu.Lock()

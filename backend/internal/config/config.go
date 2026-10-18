@@ -66,18 +66,18 @@ func Load() (*Config, error) {
 		CORSAllowedOrigins: getEnvAsSlice("CORS_ALLOWED_ORIGINS", []string{"http://localhost:3000", "http://localhost:5151"}),
 		DatabaseDriver:     strings.ToLower(getEnv("DATABASE_DRIVER", "sqlite")),
 		DatabaseURL:        getEnv("DATABASE_URL", ""),
-		SQLitePath:         getEnv("SQLITE_PATH", "./data/paygate.db"),
+		SQLitePath:         getEnv("SQLITE_PATH", "./data/authentic.db"),
 		MaxOpenConns:       getEnvAsInt("DB_MAX_OPEN_CONNS", 25),
 		MaxIdleConns:       getEnvAsInt("DB_MAX_IDLE_CONNS", 5),
 		ConnMaxLifetime:    time.Duration(getEnvAsInt("DB_CONN_MAX_LIFETIME_MINUTES", 15)) * time.Minute,
-		JWTSecret:          getEnv("JWT_SECRET", "paygate-change-me-in-production-secret-key-32chars"),
+		JWTSecret:          getEnv("JWT_SECRET", "authentic-change-me-in-production-secret-key-32chars"),
 		JWTExpiryHours:     getEnvAsInt("JWT_EXPIRY_HOURS", 72),
 		AdminEmail:         getEnv("ADMIN_EMAIL", ""),
 		AdminPassword:      getEnv("ADMIN_PASSWORD", ""),
 		MerchantNames: getEnvAsSlice("PAYMENT_MERCHANT_NAME", []string{
 			"fransi tsena",
 			"beecloud",
-			"paygate",
+			"authentic-et",
 		}),
 		MerchantAccounts: getEnvAsSlice("PAYMENT_MERCHANT_ACCOUNTS", []string{
 			"1000646339972",
@@ -92,7 +92,7 @@ func Load() (*Config, error) {
 		WorkerPollInterval:         time.Duration(getEnvAsInt("WORKER_POLL_INTERVAL_SECONDS", 5)) * time.Second,
 		WorkerConcurrency:          getEnvAsInt("WORKER_CONCURRENCY", 4),
 		WorkerLockDuration:         time.Duration(getEnvAsInt("WORKER_LOCK_DURATION_MINUTES", 10)) * time.Minute,
-		WebhookSecret:              getEnv("WEBHOOK_SECRET", "whsec_default_paygate_secret"),
+		WebhookSecret:              getEnv("WEBHOOK_SECRET", "whsec_default_authentic_secret"),
 		PresetAPIKeys:              presetKeys,
 		MasterToken:                masterToken,
 		DisableUI:                  getEnvAsBool("DISABLE_UI", false),
@@ -132,13 +132,13 @@ func (c *Config) Validate() error {
 	}
 	if c.DatabaseDriver == "postgres" && c.DatabaseURL == "" {
 		// When driver is postgres but URL empty, fallback to local default
-		c.DatabaseURL = "postgres://paygate:paygate@localhost:5432/paygate?sslmode=disable"
+		c.DatabaseURL = "postgres://authentic:authentic@localhost:5432/authentic?sslmode=disable"
 	}
 	if c.Environment == "production" {
 		if strings.Contains(c.JWTSecret, "change-me") || len(c.JWTSecret) < 32 {
 			return fmt.Errorf("JWT_SECRET must be set to a secure unique string of at least 32 characters in production")
 		}
-		if c.AdminPassword != "" && (c.AdminPassword == "PayGate2026!SecureAdmin" || strings.Contains(c.AdminPassword, "change-me")) {
+		if c.AdminPassword != "" && (c.AdminPassword == "Authentic2026!SecureAdmin" || strings.Contains(c.AdminPassword, "change-me")) {
 			return fmt.Errorf("ADMIN_PASSWORD must not use default or placeholder credentials in production")
 		}
 	}

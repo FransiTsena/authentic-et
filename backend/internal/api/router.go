@@ -6,14 +6,14 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/beecloud/paygate/internal/api/handlers"
-	"github.com/beecloud/paygate/internal/api/middleware"
-	"github.com/beecloud/paygate/internal/config"
-	"github.com/beecloud/paygate/internal/database"
-	"github.com/beecloud/paygate/internal/domain"
-	"github.com/beecloud/paygate/internal/provider"
-	"github.com/beecloud/paygate/internal/service"
-	"github.com/beecloud/paygate/internal/worker"
+	"github.com/authentic-et/authentic-et/internal/api/handlers"
+	"github.com/authentic-et/authentic-et/internal/api/middleware"
+	"github.com/authentic-et/authentic-et/internal/config"
+	"github.com/authentic-et/authentic-et/internal/database"
+	"github.com/authentic-et/authentic-et/internal/domain"
+	"github.com/authentic-et/authentic-et/internal/provider"
+	"github.com/authentic-et/authentic-et/internal/service"
+	"github.com/authentic-et/authentic-et/internal/worker"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 )
@@ -154,7 +154,7 @@ func NewRouter(deps RouterDependencies) http.Handler {
 	if deps.Config.DisableUI {
 		r.Get("/", func(w http.ResponseWriter, req *http.Request) {
 			handlers.WriteJSON(w, http.StatusOK, map[string]any{
-				"service": "paygate",
+				"service": "authentic-et",
 				"version": "1.0.0",
 				"mode":    "headless",
 				"api":     "/api/v1",

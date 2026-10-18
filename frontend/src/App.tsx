@@ -64,7 +64,7 @@ export const App: React.FC = () => {
       setUser(null);
       navigate('/');
     };
-    window.addEventListener('paygate_auth_expired', handleExpired);
+    window.addEventListener('authentic_auth_expired', handleExpired);
 
     // Global keyboard shortcut for Quick Verify (Cmd+K / Ctrl+K) inside console
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -76,7 +76,7 @@ export const App: React.FC = () => {
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window.removeEventListener('paygate_auth_expired', handleExpired);
+      window.removeEventListener('authentic_auth_expired', handleExpired);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);

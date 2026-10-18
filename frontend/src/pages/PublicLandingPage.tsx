@@ -299,7 +299,7 @@ export const PublicLandingPage: React.FC<PublicLandingPageProps> = ({
                 </div>
                 <div className="flex items-center gap-2 text-xs font-mono text-slate-400 bg-black/40 px-3 py-1 rounded">
                   <Lock className="w-3 h-3 text-[#00D26A]" />
-                  <span>https://paygate.local/api/v1/public/payment/verify</span>
+                  <span>https://authentic-et.local/api/v1/public/payment/verify</span>
                 </div>
                 <div className="w-12 text-right">
                   <span className="text-[10px] font-mono text-[#00D26A] bg-[#00D26A]/10 px-2 py-0.5 rounded">
