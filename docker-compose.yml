@@ -1,0 +1,50 @@
+# ==============================================================================
+# authentic-et Standalone Stack
+# Unified Single Entrypoint: http://localhost:5151 (also available on port 80)
+# Zero Database Server Required: Operates with Embedded SQLite / In-Memory
+# ==============================================================================
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: authentic-backend
+    restart: unless-stopped
+    environment:
+      PORT: 5151
+      LOG_LEVEL: info
+      # Defaults to embedded SQLite; falls back gracefully to In-Memory if unconfigured
+      DATABASE_DRIVER: sqlite
+      SQLITE_PATH: /data/authentic.db
+      JWT_SECRET: super-secret-production-jwt-signing-key-minimum-32-bytes
+      ADMIN_EMAIL: admin@paygate.dev
+      ADMIN_PASSWORD: admin-password-change-me
+      PAYMENT_PROVIDERS_ENABLED: mock,cbe,telebirr,boa,dashen,awash,mpesa
+      ALLOW_ORIGINS: "*"
+      WORKER_CONCURRENCY: 3
+      WORKER_POLL_INTERVAL: 3s
+    volumes:
+      - authentic_data:/data
+    expose:
+      - "5151"
+    ports:
+      - "5152:5151"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: authentic-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "5151:80"
+      - "80:80"
+      - "3000:80"
+
+volumes:
+  authentic_data:
+
+

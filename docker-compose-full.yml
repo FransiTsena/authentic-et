@@ -1,0 +1,73 @@
+# ==============================================================================
+# authentic-et Full Production Stack: PostgreSQL 16 + Durable Outbox + Reports Storage
+# ==============================================================================
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: authentic-postgres-full
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: authentic
+      POSTGRES_PASSWORD: authentic_password
+      POSTGRES_DB: authentic
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_full_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U authentic -d authentic"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: authentic-backend-full
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 5151
+      LOG_LEVEL: info
+      DATABASE_DRIVER: postgres
+      DATABASE_URL: postgres://authentic:authentic_password@postgres:5432/authentic?sslmode=disable
+      DB_MAX_OPEN_CONNS: 50
+      DB_MAX_IDLE_CONNS: 10
+      JWT_SECRET: super-secret-production-jwt-signing-key-minimum-32-bytes
+      ADMIN_EMAIL: admin@paygate.dev
+      ADMIN_PASSWORD: admin-password-change-me
+      PAYMENT_PROVIDERS_ENABLED: mock,cbe,telebirr,boa,dashen,awash,mpesa
+      ALLOW_ORIGINS: "*"
+      WORKER_ENABLED: "true"
+      WORKER_CONCURRENCY: 10
+      WORKER_POLL_INTERVAL: 2s
+    volumes:
+      - reports_data:/data/reports
+      - records_data:/data/records
+    expose:
+      - "5151"
+    ports:
+      - "5152:5151"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: authentic-frontend-full
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "5151:80"
+      - "80:80"
+      - "3000:80"
+
+volumes:
+  postgres_full_data:
+  reports_data:
+  records_data:
+

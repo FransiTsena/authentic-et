@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerabilities
+    url: https://github.com/beecloud/paygate/blob/main/SECURITY.md
+    about: Please report security issues privately via email to security@paygate.dev
+  - name: Community Discussions & Support
+    url: https://github.com/beecloud/paygate/discussions
+    about: Ask questions, share architectures, and discuss ideas with the community.
