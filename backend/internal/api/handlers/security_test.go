@@ -352,4 +352,3 @@ func TestSettingsConfiguration_AdminOnly(t *testing.T) {
 	assert.Equal(t, 10.0, updatedVerification["overpayTolerance"])
 	assert.Equal(t, false, updatedVerification["mockMode"])
 }
-

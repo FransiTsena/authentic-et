@@ -7,7 +7,7 @@ import (
 
 type AuditEvent struct {
 	ID            string         `json:"id"`
-	Action        string         `json:"action"` // e.g. "payment.verified", "payment.claimed", "apikey.created", "provisioning.dispatched"
+	Action        string         `json:"action"`    // e.g. "payment.verified", "payment.claimed", "apikey.created", "provisioning.dispatched"
 	ActorType     string         `json:"actorType"` // "system", "user", "admin", "api_key"
 	ActorID       string         `json:"actorId"`
 	ResourceID    string         `json:"resourceId"`

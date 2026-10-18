@@ -144,20 +144,20 @@ func (s *APIKeyService) ValidateKey(ctx context.Context, rawKey string) (*domain
 					prefix = prefix[:16]
 				}
 				return &domain.APIKey{
-					ID:                  "preset_env_key",
-					KeyHash:             HashKey(cleanKey),
-					Prefix:              prefix,
-					Name:                "Environment Preset Key",
-					OwnerEmail:          s.cfg.AdminEmail,
-					OwnerUserID:         "system_admin",
-					Active:              true,
-					Tier:                domain.TierEnterprise,
-					MaxRPS:              1000,
-					MonthlyQuota:        -1, // unlimited
-					DailyVolumeLimit:    -1, // unlimited
-					Permissions:         []string{"payment:verify", "payment:claim", "admin"},
-					CreatedAt:           time.Now().UTC(),
-					UpdatedAt:           time.Now().UTC(),
+					ID:               "preset_env_key",
+					KeyHash:          HashKey(cleanKey),
+					Prefix:           prefix,
+					Name:             "Environment Preset Key",
+					OwnerEmail:       s.cfg.AdminEmail,
+					OwnerUserID:      "system_admin",
+					Active:           true,
+					Tier:             domain.TierEnterprise,
+					MaxRPS:           1000,
+					MonthlyQuota:     -1, // unlimited
+					DailyVolumeLimit: -1, // unlimited
+					Permissions:      []string{"payment:verify", "payment:claim", "admin"},
+					CreatedAt:        time.Now().UTC(),
+					UpdatedAt:        time.Now().UTC(),
 				}, nil
 			}
 		}

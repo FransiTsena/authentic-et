@@ -71,7 +71,7 @@ func (p *TelebirrProvider) Verify(ctx context.Context, transactionID string) (*d
 	}
 
 	// If primary failed or timed out (due to Ethiopian regional IP geoblock), check for fallback proxy
-	if (skipPrimary || fetchErr != nil || len(html) < 20) {
+	if skipPrimary || fetchErr != nil || len(html) < 20 {
 		proxyURL := os.Getenv("TELEBIRR_PROXY_URL")
 		if proxyURL == "" {
 			proxyURL = os.Getenv("FALLBACK_PROXIES")

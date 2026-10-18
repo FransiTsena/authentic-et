@@ -17,9 +17,9 @@ import (
 )
 
 type DBStatus struct {
-	Driver          string    `json:"driver"`          // "memory", "sqlite", "postgres"
-	IsEphemeral     bool      `json:"isEphemeral"`     // true if running in-memory
-	WarningMessage  string    `json:"warningMessage"`  // non-empty if running ephemeral or warning
+	Driver          string    `json:"driver"`         // "memory", "sqlite", "postgres"
+	IsEphemeral     bool      `json:"isEphemeral"`    // true if running in-memory
+	WarningMessage  string    `json:"warningMessage"` // non-empty if running ephemeral or warning
 	Connected       bool      `json:"connected"`
 	ConnectionError string    `json:"connectionError,omitempty"`
 	MaskedDSN       string    `json:"maskedDsn,omitempty"`

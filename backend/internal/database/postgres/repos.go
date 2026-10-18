@@ -871,13 +871,13 @@ func (m *TxManager) Begin(ctx context.Context) (domain.Tx, error) {
 	}
 
 	return &postgresTx{
-		tx: sqlTx,
-		payments: &PaymentRepo{db: sqlTx},
-		apiKeys: &APIKeyRepo{db: sqlTx},
-		orders: &OrderRepo{db: sqlTx},
+		tx:           sqlTx,
+		payments:     &PaymentRepo{db: sqlTx},
+		apiKeys:      &APIKeyRepo{db: sqlTx},
+		orders:       &OrderRepo{db: sqlTx},
 		provisioning: &ProvisioningRepo{db: sqlTx},
-		audit: &AuditRepo{db: sqlTx},
-		webhooks: &WebhookRepo{db: sqlTx},
+		audit:        &AuditRepo{db: sqlTx},
+		webhooks:     &WebhookRepo{db: sqlTx},
 	}, nil
 }
 

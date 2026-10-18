@@ -17,10 +17,10 @@ import (
 )
 
 type PaymentService struct {
-	cfg       *config.Config
-	repos     *domain.Repositories
-	registry  *provider.Registry
-	logger    *slog.Logger
+	cfg      *config.Config
+	repos    *domain.Repositories
+	registry *provider.Registry
+	logger   *slog.Logger
 }
 
 func NewPaymentService(
@@ -378,5 +378,5 @@ func HashAPIKey(rawKey string) string {
 
 func ValidateTolerance(actual, expected, underpayTolerance, overpayTolerance float64) bool {
 	diff := actual - expected
-	return diff >= -(underpayTolerance + 0.01) && diff <= (overpayTolerance + 0.01)
+	return diff >= -(underpayTolerance+0.01) && diff <= (overpayTolerance+0.01)
 }

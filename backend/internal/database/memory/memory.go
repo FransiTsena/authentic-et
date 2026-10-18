@@ -11,17 +11,17 @@ import (
 )
 
 type Storage struct {
-	mu           sync.RWMutex
-	payments     map[string]*domain.Payment
-	paymentsByTx map[string]string // tx_id -> payment_id
-	apiKeys      map[string]*domain.APIKey
+	mu            sync.RWMutex
+	payments      map[string]*domain.Payment
+	paymentsByTx  map[string]string // tx_id -> payment_id
+	apiKeys       map[string]*domain.APIKey
 	apiKeysByHash map[string]string // key_hash -> id
-	orders       map[string]*domain.Order
-	jobs         map[string]*domain.ProvisioningJob
-	auditEvents  []*domain.AuditEvent
-	webhooks     map[string]*domain.WebhookEvent
-	users        map[string]*domain.User
-	usersByEmail map[string]string // email -> user_id
+	orders        map[string]*domain.Order
+	jobs          map[string]*domain.ProvisioningJob
+	auditEvents   []*domain.AuditEvent
+	webhooks      map[string]*domain.WebhookEvent
+	users         map[string]*domain.User
+	usersByEmail  map[string]string // email -> user_id
 }
 
 func New() *Storage {
@@ -546,7 +546,7 @@ func (r *ProvisioningRepo) ClaimPendingJobs(ctx context.Context, batchSize int, 
 		if len(claimed) >= batchSize {
 			break
 		}
-		if (j.Status == domain.JobPending || (j.Status == domain.JobRunning && j.LockedAt != nil && j.LockedAt.Add(lockDuration).Before(now))) {
+		if j.Status == domain.JobPending || (j.Status == domain.JobRunning && j.LockedAt != nil && j.LockedAt.Add(lockDuration).Before(now)) {
 			if j.NextAttemptAt != nil && j.NextAttemptAt.After(now) {
 				continue
 			}
@@ -928,12 +928,12 @@ type memTx struct {
 	staged *Storage
 }
 
-func (t *memTx) Payments() domain.PaymentRepository         { return &PaymentRepo{s: t.staged} }
-func (t *memTx) APIKeys() domain.APIKeyRepository           { return &APIKeyRepo{s: t.staged} }
-func (t *memTx) Orders() domain.OrderRepository             { return &OrderRepo{s: t.staged} }
+func (t *memTx) Payments() domain.PaymentRepository          { return &PaymentRepo{s: t.staged} }
+func (t *memTx) APIKeys() domain.APIKeyRepository            { return &APIKeyRepo{s: t.staged} }
+func (t *memTx) Orders() domain.OrderRepository              { return &OrderRepo{s: t.staged} }
 func (t *memTx) Provisioning() domain.ProvisioningRepository { return &ProvisioningRepo{s: t.staged} }
 func (t *memTx) Audit() domain.AuditRepository               { return &AuditRepo{s: t.staged} }
-func (t *memTx) Webhooks() domain.WebhookRepository         { return &WebhookRepo{s: t.staged} }
+func (t *memTx) Webhooks() domain.WebhookRepository          { return &WebhookRepo{s: t.staged} }
 func (t *memTx) Commit() error {
 	if t.staged != nil && t.parent != nil {
 		t.parent.apply(t.staged)

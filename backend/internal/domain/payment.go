@@ -120,16 +120,16 @@ type PaymentVerificationResult struct {
 }
 
 type PaymentListFilter struct {
-	ProviderKey   string
-	Status        string
-	Claimed       *bool
-	APIKeyID      string
-	OwnerUserID   string
-	Search        string
-	StartDate     *time.Time
-	EndDate       *time.Time
-	Limit         int
-	Offset        int
+	ProviderKey string
+	Status      string
+	Claimed     *bool
+	APIKeyID    string
+	OwnerUserID string
+	Search      string
+	StartDate   *time.Time
+	EndDate     *time.Time
+	Limit       int
+	Offset      int
 }
 
 type PaymentRepository interface {

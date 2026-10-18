@@ -9,35 +9,35 @@ import (
 )
 
 type Config struct {
-	Port                int
-	Environment         string
-	LogLevel            string
-	CORSAllowedOrigins  []string
-	DatabaseDriver      string // "postgres" or "sqlite"
-	DatabaseURL         string
-	SQLitePath          string
-	MaxOpenConns        int
-	MaxIdleConns        int
-	ConnMaxLifetime     time.Duration
-	JWTSecret           string
-	JWTExpiryHours      int
-	AdminEmail          string
-	AdminPassword       string
-	MerchantNames       []string
-	MerchantAccounts    []string
-	UnderpayTolerance   float64
-	OverpayTolerance    float64
-	MockMode            bool
-	PublicRPSBurst      int
-	WorkerEnabled       bool
-	WorkerPollInterval  time.Duration
-	WorkerConcurrency   int
-	WorkerLockDuration  time.Duration
-	WebhookSecret       string
-	PresetAPIKeys       []string
-	MasterToken         string
-	DisableUI           bool
-	AllowRegistration   bool
+	Port               int
+	Environment        string
+	LogLevel           string
+	CORSAllowedOrigins []string
+	DatabaseDriver     string // "postgres" or "sqlite"
+	DatabaseURL        string
+	SQLitePath         string
+	MaxOpenConns       int
+	MaxIdleConns       int
+	ConnMaxLifetime    time.Duration
+	JWTSecret          string
+	JWTExpiryHours     int
+	AdminEmail         string
+	AdminPassword      string
+	MerchantNames      []string
+	MerchantAccounts   []string
+	UnderpayTolerance  float64
+	OverpayTolerance   float64
+	MockMode           bool
+	PublicRPSBurst     int
+	WorkerEnabled      bool
+	WorkerPollInterval time.Duration
+	WorkerConcurrency  int
+	WorkerLockDuration time.Duration
+	WebhookSecret      string
+	PresetAPIKeys      []string
+	MasterToken        string
+	DisableUI          bool
+	AllowRegistration  bool
 	// Data Retention & Automated Cleanup
 	CleanupEnabled             bool
 	CleanupIntervalHours       int

@@ -1,5 +1,5 @@
 # Stage 1: Builder
-FROM golang:1.22-alpine AS builder
+FROM golang:1.27-alpine AS builder
 
 WORKDIR /app
 
@@ -30,8 +30,10 @@ WORKDIR /home/authentic
 COPY --from=builder /app/bin/server /usr/local/bin/authentic-server
 COPY --from=builder /app/bin/cli /usr/local/bin/authentic-cli
 
-# Persistent data directory for SQLite deployments
-RUN mkdir -p /home/authentic/data && chown -R authentic:authentic /home/authentic
+# Persistent data directory for SQLite deployments (no special root permissions required)
+RUN mkdir -p /data /home/authentic/data && \
+    chmod 777 /data /home/authentic/data && \
+    chown -R authentic:authentic /data /home/authentic
 
 USER authentic
 

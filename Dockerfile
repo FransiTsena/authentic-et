@@ -13,7 +13,7 @@ COPY frontend/ ./
 RUN npm run build
 
 # Stage 2: Build Go Backend
-FROM golang:1.22-alpine AS backend-builder
+FROM golang:1.27-alpine AS backend-builder
 WORKDIR /build
 RUN apk add --no-cache git ca-certificates tzdata
 COPY backend/go.mod backend/go.sum ./
